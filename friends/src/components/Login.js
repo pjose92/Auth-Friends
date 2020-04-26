@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import api from '../utils/api'
+import React from 'react';
+import Loader from 'react-loader-spinner';
+import axios from 'axios';
 import styled from 'styled-components'
 
-const LongDiv = styled.form`
+const Form = styled.form`
     display: flex;
     flex-direction: column;
     width: 40%;
@@ -36,46 +37,139 @@ const Button = styled.button`
     background-color: #0077CC;
     color: white;
     appearance: none;
+    :hover{
+        background: #0789e6;
+    }
 `
 
-const Login = props => {
-    const [error, setError] = useState()
-    const[user, setUser] = useState({
-        username: '',
-        password: ''
-    })
 
-    const handleChange = e => {
-        setUser({
-            ...user,
-            [e.target.name]: e.target.value,
+class Login extends React.Component {
+    state = {
+        credentials: {
+            username: '',
+            password: ''
+        },
+        isLoading: false
+    }
+
+    handleChange = e => {
+        this.setState({
+            credentials: {
+                ...this.state.credentials,
+                [e.target.name]: e.target.value
+            }
         })
     }
 
-    const handleSubmit = e => {
-        e.preventDefault()
+    login = e => {
+        e.preventDefault();
+        this.setState({
+            ...this.state.credentials,
+            isLoading: true
+        })
+        axios
+        .post('http://localhost:5000/api/login', this.state.credentials)
+        .then(res => {
+            console.log('success', res);
+            localStorage.setItem('token', res.data.payload);
+            this.props.history.push('/friends')
+            this.setState({
+                credentials: {
+                    username: '',
+                    password: ''
+                },
+                isLoading: false
+            })
+        })
+        .catch(err => console.log('error', err))
+    };
 
-        api()
-            .post('/login', user)
-            .then(res => {
-                localStorage.setItem('token', res.data.payload)
-                props.history.push('/friends')
-            })
-            .catch(err => {
-                setError(err.response.data.message)
-            })
+    render() {
+        return this.state.isLoading ? (
+            <Loader
+            type="Puff"
+            color="#00BFFF"
+            height={100}
+            width={100}
+            timeout={4000}
+            />) : (
+                <Form onSubmit={this.login}>
+                    <Input
+                    required
+                    placeholder='Username'
+                    id='username'
+                    type='text'
+                    name='username'
+                    value={this.state.credentials.username}
+                    onChange={this.handleChange}
+                    />
+                
+                    <Input
+                    required
+                    placeholder='Password'
+                    id='password'
+                    type='password'
+                    name='password'
+                    value={this.state.credentials.password}
+                    onChange={this.handleChange}
+                    />
+                
+                    <Button type='submit'>Log In</Button>
+                </Form>
+            )
+
     }
+}    
 
-    return (
-        <LongDiv onSubmit={handleSubmit}>
-            {error && <div className='error'>{error}</div>}
 
-            <Input type='text' name='username' placeholder='username' value={user.username} onChange={handleChange} />
-            <Input type='password' name='password' placeholder='password' value={user.password} onChange={handleChange} />
+export default Login;
 
-            <Button type='submit'>Login</Button> 
-        </LongDiv>
-    )
-}
 
-export default Login
+// import React, { useState } from 'react'
+// import api from '../utils/axiosWithAuth'
+// import styled from 'styled-components'
+
+// import Loader from 'react-loader-spinner'
+
+// const Login = props => {
+//     const [error, setError] = useState()
+//     const[user, setUser] = useState({
+//         username: '',
+//         password: ''
+//     })
+
+//     const handleChange = e => {
+//         setUser({
+//             ...user,
+//             [e.target.name]: e.target.value,
+//         })
+//     }
+
+//     const handleSubmit = e => {
+//         e.preventDefault()
+
+//         api()
+//             .post('/login', user)
+//             .then(res => {
+                
+//                 localStorage.setItem('token', res.data.payload)
+//                 props.history.push('/friends')
+//             })
+//             .catch(err => {
+//                 setError(err.response.data.message)
+//             })
+//     }
+
+//     return (
+//         <LongDiv onSubmit={handleSubmit}>
+//             {error && <div className='error'>{error}</div>}
+
+//             <Input type='text' name='username' placeholder='username' value={user.username} onChange={handleChange} />
+//             <Input type='password' name='password' placeholder='password' value={user.password} onChange={handleChange} />
+
+//             <Button type='submit'>Login</Button> 
+//         </LongDiv>
+//     )
+// }
+
+// export default Login

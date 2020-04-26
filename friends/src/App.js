@@ -12,21 +12,33 @@ import ProtectedRoute from './components/ProtectedRoute'
 import './App.css';
 import styled from 'styled-components'
 
+const Nav = styled.nav`
+  background: #2d3436;
+  width: 100%;
+  padding: 25px;
+`
+
 const NavLink = styled(Link)`
-  margin: 2rem 2rem;
+  color: #dfe6e9;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin: 0 1.5rem;
+  text-decoration: none;
+  cursor: pointer;
+
 `
 
 function App() {
 
   return (
     <div className="App">
-      <nav>
+      <Nav>
         <NavLink to='/'>Home</NavLink>
 
-        <NavLink to='/login'>login</NavLink>        
+        <NavLink to='/login'>Login</NavLink>        
         <NavLink to='/friends'>Friends</NavLink>
-        <NavLink to='/logout'>logout</NavLink>
-      </nav>
+        <NavLink to='/logout'>Logout</NavLink>
+      </Nav>
       
 
 

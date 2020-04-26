@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import api from '../utils/api'
+import api from '../utils/axiosWithAuth'
 import Friend from './Friend'
 import AddFriend from './AddFriend'
 import styled from 'styled-components'
