@@ -70,7 +70,7 @@ class Login extends React.Component {
         axios
         .post('http://localhost:5000/api/login', this.state.credentials)
         .then(res => {
-            console.log('success', res);
+            console.log('jp: Login.js line 73 success', res);
             localStorage.setItem('token', res.data.payload);
             this.props.history.push('/friends')
             this.setState({
@@ -81,7 +81,7 @@ class Login extends React.Component {
                 isLoading: false
             })
         })
-        .catch(err => console.log('error', err))
+        .catch(err => console.log('jp: error line 84 Login.js', err))
     };
 
     render() {
@@ -91,7 +91,7 @@ class Login extends React.Component {
             color="#00BFFF"
             height={100}
             width={100}
-            timeout={4000}
+            timeout={8000}
             />) : (
                 <Form onSubmit={this.login}>
                     <Input

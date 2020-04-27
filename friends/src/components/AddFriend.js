@@ -56,6 +56,7 @@ const AddFriend = ({setFriends}) => {
         api()
             .post('friends', friend)
             .then(res => {
+                console.log('jp: AddFriend.js friend was added', res)
                 setFriends(res.data)
             })
             .catch(err => {
